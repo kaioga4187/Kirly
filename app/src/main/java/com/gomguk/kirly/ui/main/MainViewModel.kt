@@ -18,12 +18,28 @@ class MainViewModel @Inject constructor(
     private val _items = MutableLiveData<List<SectionInfo?>>()
     val items: LiveData<List<SectionInfo?>> = _items
 
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
     private var currentPage = 1
     private var isLoading = false
     private var isLastPage = false
 
     init {
         loadItems()
+    }
+
+    fun refresh() {
+        currentPage = 1
+        isLastPage = false
+        _isRefreshing.value = true
+        
+        viewModelScope.launch {
+            val newSections = getSectionsUseCase(currentPage)
+            _items.value = newSections
+            currentPage++
+            _isRefreshing.value = false
+        }
     }
 
     fun loadItems() {

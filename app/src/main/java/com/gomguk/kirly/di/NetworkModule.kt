@@ -1,7 +1,10 @@
 package com.gomguk.kirly.di
 
+import com.gomguk.kirly.data.SectionType
 import com.gomguk.kirly.data.mockserver.MockInterceptor
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +19,17 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return Gson()
+        return GsonBuilder()
+            .registerTypeAdapter(SectionType::class.java, JsonDeserializer { json, _, _ ->
+                val typeString = json.asString
+                when (typeString.lowercase()) {
+                    "vertical" -> SectionType.Vertical
+                    "horizontal" -> SectionType.Horizontal
+                    "grid" -> SectionType.Grid
+                    else -> SectionType.Unknown(typeString)
+                }
+            })
+            .create()
     }
 
     @Provides

@@ -23,9 +23,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
+        setupSwipeRefreshLayout()
 
         mainViewModel.items.observe(this) { items ->
             mainAdapter.updateItems(items)
+        }
+
+        mainViewModel.isRefreshing.observe(this) { isRefreshing ->
+            binding.swipeRefreshLayout.isRefreshing = isRefreshing
+        }
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            mainViewModel.refresh()
         }
     }
 
