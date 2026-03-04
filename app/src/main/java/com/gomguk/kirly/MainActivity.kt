@@ -46,19 +46,19 @@ class MainActivity : AppCompatActivity() {
             adapter = mainAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                    val totalItemCount = layoutManager.itemCount
-                    
-                    if (lastVisibleItemPosition >= totalItemCount - 3) {
-                        mainViewModel.loadItems()
-                    }
-                }
-            })
+//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//
+//                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+//                    val totalItemCount = layoutManager.itemCount
+//
+//                    if (lastVisibleItemPosition >= totalItemCount - 3) {
+//                        mainViewModel.loadItems()
+//                    }
+//                }
+//            })
         }
     }
 }

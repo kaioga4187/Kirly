@@ -3,8 +3,8 @@ package com.gomguk.kirly.ui.main
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.gomguk.kirly.data.SectionInfo
 import com.gomguk.kirly.data.SectionType
 import com.gomguk.kirly.databinding.ItemLoadingBinding
@@ -40,19 +40,19 @@ class MainAdapter(private var sectionInfoList: List<SectionInfo?>) :
         return when (viewType) {
             VIEW_TYPE_VERTICAL -> {
                 val binding = ItemSectionVerticalBinding.inflate(layoutInflater, parent, false)
-                ItemViewHolder(binding)
+                VerticalViewHolder(binding)
             }
             VIEW_TYPE_HORIZONTAL -> {
                 val binding = ItemSectionHorizontalBinding.inflate(layoutInflater, parent, false)
-                ItemViewHolder(binding)
+                HorizontalViewHolder(binding)
             }
             VIEW_TYPE_GRID -> {
                 val binding = ItemSectionGridBinding.inflate(layoutInflater, parent, false)
-                ItemViewHolder(binding)
+                GridViewHolder(binding)
             }
             VIEW_TYPE_DEFAULT -> {
                 val binding = ItemSectionDefaultBinding.inflate(layoutInflater, parent, false)
-                ItemViewHolder(binding)
+                DefaultViewHolder(binding)
             }
             else -> {
                 val binding = ItemLoadingBinding.inflate(layoutInflater, parent, false)
@@ -62,8 +62,12 @@ class MainAdapter(private var sectionInfoList: List<SectionInfo?>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ItemViewHolder) {
-            sectionInfoList[position]?.let { holder.bind(it) }
+        val item = sectionInfoList[position] ?: return
+        when (holder) {
+            is VerticalViewHolder -> holder.bind(item)
+            is HorizontalViewHolder -> holder.bind(item)
+            is GridViewHolder -> holder.bind(item)
+            is DefaultViewHolder -> holder.bind(item)
         }
     }
 
@@ -75,14 +79,46 @@ class MainAdapter(private var sectionInfoList: List<SectionInfo?>) :
         notifyDataSetChanged()
     }
 
-    class ItemViewHolder(private val binding: ViewBinding) :
+    class VerticalViewHolder(private val binding: ItemSectionVerticalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(sectionInfo: SectionInfo) {
-            // 모든 item_section_*.xml은 item_section.xml을 include하고 있으므로,
-            // 바인딩 객체에서 내부의 TextView에 접근할 수 있습니다.
-            // include된 레이아웃의 ID가 지정되지 않았다면, root 뷰를 통해 접근하거나 
-            // binding 객체의 타입을 체크하여 처리할 수 있습니다.
-            // 여기서는 공통 인터페이스인 ItemSectionBinding을 활용하는 것이 좋습니다.
+            val innerBinding = ItemSectionBinding.bind(binding.root)
+            innerBinding.textView.text = sectionInfo.title
+        }
+    }
+
+    class HorizontalViewHolder(private val binding: ItemSectionHorizontalBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        
+        private val productAdapter = ProductAdapter()
+        
+        init {
+            binding.recyclerView.apply {
+                adapter = productAdapter
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            }
+        }
+
+        fun bind(sectionInfo: SectionInfo) {
+            val innerBinding = ItemSectionBinding.bind(binding.root)
+            innerBinding.textView.text = sectionInfo.title
+            
+            // TODO: sectionInfo.url 등을 이용해 실제 상품 데이터를 가져와서 productAdapter.submitList() 호출 필요
+            // 현재는 UI 구조만 세팅되어 있습니다.
+        }
+    }
+
+    class GridViewHolder(private val binding: ItemSectionGridBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(sectionInfo: SectionInfo) {
+            val innerBinding = ItemSectionBinding.bind(binding.root)
+            innerBinding.textView.text = sectionInfo.title
+        }
+    }
+
+    class DefaultViewHolder(private val binding: ItemSectionDefaultBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(sectionInfo: SectionInfo) {
             val innerBinding = ItemSectionBinding.bind(binding.root)
             innerBinding.textView.text = sectionInfo.title
         }
