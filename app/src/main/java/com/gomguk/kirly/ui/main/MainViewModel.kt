@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gomguk.kirly.data.SectionInfo
+import com.gomguk.kirly.domain.usecase.GetSectionItemsUseCase
 import com.gomguk.kirly.domain.usecase.GetSectionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,11 +13,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getSectionsUseCase: GetSectionsUseCase
+    private val getSectionsUseCase: GetSectionsUseCase,
+    private val getSectionItemsUseCase: GetSectionItemsUseCase
 ) : ViewModel() {
 
-    private val _items = MutableLiveData<List<SectionInfo?>>()
-    val items: LiveData<List<SectionInfo?>> = _items
+    private val _sectionInfoList = MutableLiveData<List<SectionInfo?>>()
+    val sectionInfoList: LiveData<List<SectionInfo?>> = _sectionInfoList
 
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -36,7 +38,7 @@ class MainViewModel @Inject constructor(
         
         viewModelScope.launch {
             val newSections = getSectionsUseCase(currentPage)
-            _items.value = newSections
+            _sectionInfoList.value = newSections
             currentPage++
             _isRefreshing.value = false
         }
@@ -47,29 +49,43 @@ class MainViewModel @Inject constructor(
         
         isLoading = true
         
-        // 로딩 시작: 리스트 끝에 null 추가
-        val currentList = (_items.value ?: emptyList()).toMutableList()
+        val currentList = (_sectionInfoList.value ?: emptyList()).toMutableList()
         currentList.add(null)
-        _items.value = currentList
+        _sectionInfoList.value = currentList
 
         viewModelScope.launch {
             val newSections = getSectionsUseCase(currentPage)
             
-            // 로딩 종료: null 제거
-            val updatedList = (_items.value ?: emptyList()).toMutableList()
+            val updatedList = (_sectionInfoList.value ?: emptyList()).toMutableList()
             if (updatedList.isNotEmpty() && updatedList.last() == null) {
                 updatedList.removeAt(updatedList.size - 1)
             }
 
             if (newSections.isEmpty()) {
                 isLastPage = true
-                _items.value = updatedList
+                _sectionInfoList.value = updatedList
             } else {
-                _items.value = updatedList + newSections
+                _sectionInfoList.value = updatedList + newSections
                 currentPage++
             }
 
             isLoading = false
+        }
+    }
+
+    fun loadSectionItems(sectionId: Int) {
+        val currentList = _sectionInfoList.value ?: return
+        val section = currentList.find { it?.id == sectionId } ?: return
+
+        // 이미 데이터를 불러왔거나 불러오는 중이면 리턴
+        if (section.products.isNotEmpty()) return
+
+        viewModelScope.launch {
+            val products = getSectionItemsUseCase(sectionId)
+            section.products = products
+
+            // 데이터 변경 알림을 위해 LiveData 업데이트
+            _sectionInfoList.value = currentList
         }
     }
 }

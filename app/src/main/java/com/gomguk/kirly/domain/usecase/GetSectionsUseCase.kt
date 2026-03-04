@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetSectionsUseCase @Inject constructor(
     private val mainRepository: MainRepository
 ) {
-    operator fun invoke(page: Int = 1): List<SectionInfo> = mainRepository.getSections(page)
+    suspend operator fun invoke(page: Int = 1): List<SectionInfo> = mainRepository.getSections(page)
 }

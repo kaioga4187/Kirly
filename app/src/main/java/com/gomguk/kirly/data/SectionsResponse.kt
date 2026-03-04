@@ -14,6 +14,7 @@ data class SectionInfo(
     val id: Int,
     val type: SectionType,
     val url: String,
+    var products: List<Product> = emptyList()
 )
 
 sealed class SectionType {

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.gomguk.kirly.databinding.ActivityMainBinding
 import com.gomguk.kirly.ui.main.MainAdapter
 import com.gomguk.kirly.ui.main.MainViewModel
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSwipeRefreshLayout()
 
-        mainViewModel.items.observe(this) { items ->
+        mainViewModel.sectionInfoList.observe(this) { items ->
             mainAdapter.updateItems(items)
         }
 
@@ -41,11 +40,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        mainAdapter = MainAdapter(emptyList())
+        mainAdapter = MainAdapter(emptyList(), mainViewModel::loadSectionItems)
         binding.recyclerView.apply {
             adapter = mainAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
-            
+
 //            addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 //                    super.onScrolled(recyclerView, dx, dy)
