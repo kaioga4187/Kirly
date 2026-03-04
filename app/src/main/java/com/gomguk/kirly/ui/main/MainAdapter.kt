@@ -43,7 +43,7 @@ class MainAdapter(
         return when (viewType) {
             VIEW_TYPE_VERTICAL -> {
                 val binding = ItemSectionVerticalBinding.inflate(layoutInflater, parent, false)
-                VerticalViewHolder(binding)
+                VerticalViewHolder(binding, onSectionVisible)
             }
             VIEW_TYPE_HORIZONTAL -> {
                 val binding = ItemSectionHorizontalBinding.inflate(layoutInflater, parent, false)
@@ -82,11 +82,30 @@ class MainAdapter(
         notifyDataSetChanged()
     }
 
-    class VerticalViewHolder(private val binding: ItemSectionVerticalBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class VerticalViewHolder(
+        private val binding: ItemSectionVerticalBinding,
+        private val onSectionVisible: (Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_VERTICAL)
+
+        init {
+            binding.recyclerView.apply {
+                adapter = productAdapter
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            }
+        }
+
         fun bind(sectionInfo: SectionInfo) {
             val innerBinding = ItemSectionBinding.bind(binding.root)
             innerBinding.textView.text = sectionInfo.title
+            val products = sectionInfo.products
+
+            if (products.isNullOrEmpty()) {
+                onSectionVisible(sectionInfo.id)
+            } else {
+                productAdapter.submitList(products)
+            }
         }
     }
 
@@ -95,7 +114,7 @@ class MainAdapter(
         private val onSectionVisible: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         
-        private val productAdapter = ProductAdapter()
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL)
         
         init {
             binding.recyclerView.apply {
@@ -122,7 +141,7 @@ class MainAdapter(
         private val onSectionVisible: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val productAdapter = ProductAdapter()
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL)
 
         init {
             binding.recyclerView.apply {

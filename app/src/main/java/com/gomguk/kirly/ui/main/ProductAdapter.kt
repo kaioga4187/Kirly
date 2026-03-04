@@ -7,8 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gomguk.kirly.data.Product
 import com.gomguk.kirly.databinding.ItemProductSmallBinding
+import com.gomguk.kirly.databinding.ItemProductVerticalBinding
 
-class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val VIEW_TYPE_SMALL = 0
+        const val VIEW_TYPE_VERTICAL = 1
+    }
 
     private var items: List<Product> = emptyList()
 
@@ -18,18 +24,47 @@ class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() 
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val binding = ItemProductSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+    override fun getItemViewType(position: Int): Int {
+        return viewType
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            VIEW_TYPE_VERTICAL -> {
+                val binding = ItemProductVerticalBinding.inflate(layoutInflater, parent, false)
+                ProductVerticalViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemProductSmallBinding.inflate(layoutInflater, parent, false)
+                ProductSmallViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = items[position]
+        when (holder) {
+            is ProductSmallViewHolder -> holder.bind(item)
+            is ProductVerticalViewHolder -> holder.bind(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
-    class ProductViewHolder(private val binding: ItemProductSmallBinding) :
+    class ProductSmallViewHolder(private val binding: ItemProductSmallBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(product: Product) {
+            binding.nameTextView.text = product.name
+            binding.priceTextView.text = "${product.discountedPrice ?: product.originalPrice}원"
+            
+            Glide.with(binding.imageView)
+                .load(product.image)
+                .into(binding.imageView)
+        }
+    }
+
+    class ProductVerticalViewHolder(private val binding: ItemProductVerticalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.nameTextView.text = product.name
