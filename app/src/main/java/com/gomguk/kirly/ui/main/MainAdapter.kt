@@ -106,11 +106,12 @@ class MainAdapter(
         fun bind(sectionInfo: SectionInfo) {
             val innerBinding = ItemSectionBinding.bind(binding.root)
             innerBinding.textView.text = sectionInfo.title
+            val products = sectionInfo.products
 
-            if (sectionInfo.products.isEmpty()) {
+            if (products.isNullOrEmpty()) {
                 onSectionVisible(sectionInfo.id)
             } else {
-                productAdapter.submitList(sectionInfo.products)
+                productAdapter.submitList(products)
             }
         }
     }

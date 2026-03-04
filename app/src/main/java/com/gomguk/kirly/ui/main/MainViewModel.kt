@@ -77,8 +77,8 @@ class MainViewModel @Inject constructor(
         val currentList = _sectionInfoList.value ?: return
         val section = currentList.find { it?.id == sectionId } ?: return
 
-        // 이미 데이터를 불러왔거나 불러오는 중이면 리턴
-        if (section.products.isNotEmpty()) return
+        // products가 null이거나 비어있을 때만 데이터를 불러옵니다.
+        if (!section.products.isNullOrEmpty()) return
 
         viewModelScope.launch {
             val products = getSectionItemsUseCase(sectionId)
