@@ -1,23 +1,25 @@
 package com.gomguk.kirly.ui.main
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gomguk.kirly.data.Product
-import com.gomguk.kirly.databinding.ItemProductBinding
+import com.gomguk.kirly.databinding.ItemProductSmallBinding
 
 class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private var items: List<Product> = emptyList()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(newItems: List<Product>) {
         items = newItems
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemProductSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProductViewHolder(binding)
     }
 
@@ -27,7 +29,7 @@ class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() 
 
     override fun getItemCount(): Int = items.size
 
-    class ProductViewHolder(private val binding: ItemProductBinding) :
+    class ProductViewHolder(private val binding: ItemProductSmallBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.nameTextView.text = product.name

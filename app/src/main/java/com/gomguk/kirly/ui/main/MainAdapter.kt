@@ -3,6 +3,7 @@ package com.gomguk.kirly.ui.main
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gomguk.kirly.data.SectionInfo
@@ -50,7 +51,7 @@ class MainAdapter(
             }
             VIEW_TYPE_GRID -> {
                 val binding = ItemSectionGridBinding.inflate(layoutInflater, parent, false)
-                GridViewHolder(binding)
+                GridViewHolder(binding, onSectionVisible)
             }
             VIEW_TYPE_DEFAULT -> {
                 val binding = ItemSectionDefaultBinding.inflate(layoutInflater, parent, false)
@@ -116,11 +117,30 @@ class MainAdapter(
         }
     }
 
-    class GridViewHolder(private val binding: ItemSectionGridBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class GridViewHolder(
+        private val binding: ItemSectionGridBinding,
+        private val onSectionVisible: (Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val productAdapter = ProductAdapter()
+
+        init {
+            binding.recyclerView.apply {
+                adapter = productAdapter
+                layoutManager = GridLayoutManager(context, 3)
+            }
+        }
+
         fun bind(sectionInfo: SectionInfo) {
             val innerBinding = ItemSectionBinding.bind(binding.root)
             innerBinding.textView.text = sectionInfo.title
+            val products = sectionInfo.products
+
+            if (products.isNullOrEmpty()) {
+                onSectionVisible(sectionInfo.id)
+            } else {
+                productAdapter.submitList(products)
+            }
         }
     }
 
