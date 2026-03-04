@@ -41,7 +41,7 @@ class MainRepository @Inject constructor(
 
     suspend fun getSectionItems(sectionId: Int): List<Product> = withContext(Dispatchers.IO) {
         val request = Request.Builder()
-            .url("https://kurly.com/section/products/section_products_$sectionId")
+            .url("https://kurly.com/section/products?sectionId=$sectionId")
             .build()
 
         okHttpClient.newCall(request).execute().use { response ->
