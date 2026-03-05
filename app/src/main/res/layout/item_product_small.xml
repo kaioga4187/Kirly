@@ -17,48 +17,65 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/backgrounds/scenic" />
 
+    <ImageButton
+        android:id="@+id/heartButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_btn_heart_off"
+        app:layout_constraintRight_toRightOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="@id/imageView" />
+
+    <TextView
+        android:id="@+id/discountPercentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#FF5A5A"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        tools:text="30%" />
+
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/discountPercentTextView"
+        app:layout_constraintLeft_toRightOf="@id/discountPercentTextView"
+        app:layout_constraintTop_toTopOf="@id/discountPercentTextView"
+        tools:text="1,800원" />
+
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="2"
+        android:textColor="#666666"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/discountPercentTextView"
         tools:text="상품명입니다." />
-
-    <TextView
-        android:id="@+id/discountPercentTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="2dp"
-        android:textColor="#fa622f"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameTextView"
-        tools:text="30%"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/priceTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@id/discountPercentTextView"
-        app:layout_constraintTop_toBottomOf="@id/nameTextView"
-        tools:text="1,800원" />
 
     <TextView
         android:id="@+id/discountPriceTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="#999999"
+        android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priceTextView"
-        tools:text="1,500원" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+        tools:text="2,500원" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

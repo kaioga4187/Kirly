@@ -10,5 +10,6 @@ data class Product(
     val image: String,
     val originalPrice: Int,
     val discountedPrice: Int? = null,
-    val isSoldOut: Boolean = false
+    val isSoldOut: Boolean = false,
+    var isFavorite: Boolean = false
 )

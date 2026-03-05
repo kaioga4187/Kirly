@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.gomguk.kirly.R
 import com.gomguk.kirly.data.Product
 import com.gomguk.kirly.databinding.ItemProductSmallBinding
 import com.gomguk.kirly.databinding.ItemProductVerticalBinding
@@ -75,6 +76,16 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
                 binding.discountPriceTextView.visibility = View.GONE
             }
 
+            binding.heartButton.setImageResource(
+                if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
+            )
+            binding.heartButton.setOnClickListener {
+                product.isFavorite = !product.isFavorite
+                binding.heartButton.setImageResource(
+                    if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
+                )
+            }
+
             Glide.with(binding.imageView)
                 .load(product.image)
                 .into(binding.imageView)
@@ -99,6 +110,16 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
             } else {
                 binding.discountPercentTextView.visibility = View.GONE
                 binding.discountPriceTextView.visibility = View.GONE
+            }
+
+            binding.heartButton.setImageResource(
+                if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
+            )
+            binding.heartButton.setOnClickListener {
+                product.isFavorite = !product.isFavorite
+                binding.heartButton.setImageResource(
+                    if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
+                )
             }
 
             Glide.with(binding.imageView)
