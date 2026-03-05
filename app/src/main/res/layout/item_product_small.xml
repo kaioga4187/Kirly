@@ -31,14 +31,34 @@
         tools:text="상품명입니다." />
 
     <TextView
+        android:id="@+id/discountPercentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:textColor="#fa622f"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+        tools:text="30%"
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/priceTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/discountPercentTextView"
         app:layout_constraintTop_toBottomOf="@id/nameTextView"
         tools:text="1,800원" />
+
+    <TextView
+        android:id="@+id/discountPriceTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/priceTextView"
+        tools:text="1,500원" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
