@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        mainAdapter = MainAdapter(emptyList(), mainViewModel::loadSectionItems)
+        mainAdapter = MainAdapter(emptyList(), mainViewModel::loadSectionItems, mainViewModel::toggleFavorite)
         binding.recyclerView.apply {
             adapter = mainAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)

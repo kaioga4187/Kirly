@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gomguk.kirly.data.Product
 import com.gomguk.kirly.data.SectionInfo
 import com.gomguk.kirly.data.SectionType
 import com.gomguk.kirly.databinding.ItemLoadingBinding
@@ -17,7 +18,8 @@ import com.gomguk.kirly.databinding.ItemSectionBinding
 
 class MainAdapter(
     private var sectionInfoList: List<SectionInfo?>,
-    private val onSectionVisible: (Int) -> Unit
+    private val onSectionVisible: (Int) -> Unit,
+    private val onFavoriteClick: (Product) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -43,15 +45,15 @@ class MainAdapter(
         return when (viewType) {
             VIEW_TYPE_VERTICAL -> {
                 val binding = ItemSectionVerticalBinding.inflate(layoutInflater, parent, false)
-                VerticalViewHolder(binding, onSectionVisible)
+                VerticalViewHolder(binding, onSectionVisible, onFavoriteClick)
             }
             VIEW_TYPE_HORIZONTAL -> {
                 val binding = ItemSectionHorizontalBinding.inflate(layoutInflater, parent, false)
-                HorizontalViewHolder(binding, onSectionVisible)
+                HorizontalViewHolder(binding, onSectionVisible, onFavoriteClick)
             }
             VIEW_TYPE_GRID -> {
                 val binding = ItemSectionGridBinding.inflate(layoutInflater, parent, false)
-                GridViewHolder(binding, onSectionVisible)
+                GridViewHolder(binding, onSectionVisible, onFavoriteClick)
             }
             VIEW_TYPE_DEFAULT -> {
                 val binding = ItemSectionDefaultBinding.inflate(layoutInflater, parent, false)
@@ -84,10 +86,11 @@ class MainAdapter(
 
     class VerticalViewHolder(
         private val binding: ItemSectionVerticalBinding,
-        private val onSectionVisible: (Int) -> Unit
+        private val onSectionVisible: (Int) -> Unit,
+        private val onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_VERTICAL)
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_VERTICAL, onFavoriteClick)
 
         init {
             binding.recyclerView.apply {
@@ -111,10 +114,11 @@ class MainAdapter(
 
     class HorizontalViewHolder(
         private val binding: ItemSectionHorizontalBinding,
-        private val onSectionVisible: (Int) -> Unit
+        private val onSectionVisible: (Int) -> Unit,
+        private val onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         
-        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL)
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL, onFavoriteClick)
         
         init {
             binding.recyclerView.apply {
@@ -138,10 +142,11 @@ class MainAdapter(
 
     class GridViewHolder(
         private val binding: ItemSectionGridBinding,
-        private val onSectionVisible: (Int) -> Unit
+        private val onSectionVisible: (Int) -> Unit,
+        private val onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL)
+        private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL, onFavoriteClick)
 
         init {
             binding.recyclerView.apply {

@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gomguk.kirly.data.Product
 import com.gomguk.kirly.data.SectionInfo
+import com.gomguk.kirly.data.local.dao.FavoriteProductDao
+import com.gomguk.kirly.data.local.entity.FavoriteProductEntity
 import com.gomguk.kirly.domain.usecase.GetSectionItemsUseCase
 import com.gomguk.kirly.domain.usecase.GetSectionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getSectionsUseCase: GetSectionsUseCase,
-    private val getSectionItemsUseCase: GetSectionItemsUseCase
+    private val getSectionItemsUseCase: GetSectionItemsUseCase,
+    private val favoriteProductDao: FavoriteProductDao
 ) : ViewModel() {
 
     private val _sectionInfoList = MutableLiveData<List<SectionInfo?>>()
@@ -86,6 +90,16 @@ class MainViewModel @Inject constructor(
 
             // 데이터 변경 알림을 위해 LiveData 업데이트
             _sectionInfoList.value = currentList
+        }
+    }
+
+    fun toggleFavorite(product: Product) {
+        viewModelScope.launch {
+            if (product.isFavorite) {
+                favoriteProductDao.insertFavorite(FavoriteProductEntity(product.id))
+            } else {
+                favoriteProductDao.deleteFavorite(product.id)
+            }
         }
     }
 }

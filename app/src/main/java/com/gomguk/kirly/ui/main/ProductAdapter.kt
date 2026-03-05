@@ -13,7 +13,10 @@ import com.gomguk.kirly.databinding.ItemProductSmallBinding
 import com.gomguk.kirly.databinding.ItemProductVerticalBinding
 import com.gomguk.kirly.util.PriceUtil
 
-class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ProductAdapter(
+    private val viewType: Int = VIEW_TYPE_SMALL,
+    private val onFavoriteClick: (Product) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val VIEW_TYPE_SMALL = 0
@@ -37,11 +40,11 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
         return when (viewType) {
             VIEW_TYPE_VERTICAL -> {
                 val binding = ItemProductVerticalBinding.inflate(layoutInflater, parent, false)
-                ProductVerticalViewHolder(binding)
+                ProductVerticalViewHolder(binding, onFavoriteClick)
             }
             else -> {
                 val binding = ItemProductSmallBinding.inflate(layoutInflater, parent, false)
-                ProductSmallViewHolder(binding)
+                ProductSmallViewHolder(binding, onFavoriteClick)
             }
         }
     }
@@ -56,8 +59,10 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
 
     override fun getItemCount(): Int = items.size
 
-    class ProductSmallViewHolder(private val binding: ItemProductSmallBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ProductSmallViewHolder(
+        private val binding: ItemProductSmallBinding,
+        private val onFavoriteClick: (Product) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.nameTextView.text = product.name
             
@@ -84,6 +89,7 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
                 binding.heartButton.setImageResource(
                     if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
                 )
+                onFavoriteClick(product)
             }
 
             Glide.with(binding.imageView)
@@ -92,8 +98,10 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
         }
     }
 
-    class ProductVerticalViewHolder(private val binding: ItemProductVerticalBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ProductVerticalViewHolder(
+        private val binding: ItemProductVerticalBinding,
+        private val onFavoriteClick: (Product) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.nameTextView.text = product.name
             
@@ -120,6 +128,7 @@ class ProductAdapter(private val viewType: Int = VIEW_TYPE_SMALL) : RecyclerView
                 binding.heartButton.setImageResource(
                     if (product.isFavorite) R.drawable.ic_btn_heart_on else R.drawable.ic_btn_heart_off
                 )
+                onFavoriteClick(product)
             }
 
             Glide.with(binding.imageView)
