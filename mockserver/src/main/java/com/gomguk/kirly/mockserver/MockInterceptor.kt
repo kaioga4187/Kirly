@@ -1,4 +1,4 @@
-package com.gomguk.kirly.data.mockserver
+package com.gomguk.kirly.mockserver
 
 import android.os.SystemClock
 import okhttp3.Interceptor
@@ -9,7 +9,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import javax.inject.Inject
 import kotlin.random.Random
 
-internal class MockInterceptor @Inject constructor(
+class MockInterceptor @Inject constructor(
     private val mockServer: MockServer
 ) : Interceptor {
 

@@ -1,7 +1,7 @@
 package com.gomguk.kirly.di
 
 import com.gomguk.kirly.data.SectionType
-import com.gomguk.kirly.data.mockserver.MockInterceptor
+import com.gomguk.kirly.mockserver.MockInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer

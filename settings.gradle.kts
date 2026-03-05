@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kirly"
 include(":app")
+include(":mockserver")

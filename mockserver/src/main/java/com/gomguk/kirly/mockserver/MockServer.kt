@@ -1,10 +1,10 @@
-package com.gomguk.kirly.data.mockserver
+package com.gomguk.kirly.mockserver
 
-import com.gomguk.kirly.data.mockserver.core.FileProvider
+import com.gomguk.kirly.mockserver.core.FileProvider
 import okhttp3.Request
 import javax.inject.Inject
 
-internal class MockServer @Inject constructor(
+class MockServer @Inject constructor(
     private val fileProvider: FileProvider
 ) {
 
