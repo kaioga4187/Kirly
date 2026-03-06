@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdk = 24
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.gomguk.kirly.mockserver.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -43,4 +43,12 @@ dependencies {
     ksp(libs.hilt.compiler)
     
     testImplementation(libs.junit)
+    
+    // Hilt Testing
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    
+    // Testing
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
