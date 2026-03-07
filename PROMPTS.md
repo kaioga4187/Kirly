@@ -45,3 +45,8 @@
 
 ## 7. Multi-Module Refactoring
 - **Prompt:** 아주 좋아! 다음은 멀티 모듈을 만들고 싶어. 현재 com.gomguk.kirly.data.mockserver 내에 있는 것들을 따로 빼서 모듈로 만들고 싶어.
+
+## 8. Code Review & Architecture Improvement
+- **Prompt:** 이 프로젝트의 코드들을 전체적으로 리뷰하고 싶어. 코드 리뷰를 부탁할게
+- **Prompt:** 현재 MainRepository에서 OkHttpClient와 Gson을 직접 사용해 수동으로 요청을 처리하고 있어. Retrofit을 도입해줘
+- **Prompt:** 응, 수정해줘
