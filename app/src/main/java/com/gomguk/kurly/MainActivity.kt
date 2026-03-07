@@ -51,12 +51,16 @@ class MainActivity : AppCompatActivity() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                    val totalItemCount = layoutManager.itemCount
+                    if (dy > 0) { // 스크롤을 아래로 내릴 때만 체크
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                        val totalItemCount = layoutManager.itemCount
 
-                    if (lastVisibleItemPosition >= totalItemCount) {
-                        mainViewModel.loadItems()
+                        // lastVisibleItemPosition은 0부터 시작하므로, totalItemCount - 1과 비교해야 끝에 도달한 것입니다.
+                        // 조금 더 미리 로드하기 위해 totalItemCount - 2 정도로 설정할 수도 있습니다.
+                        if (lastVisibleItemPosition >= totalItemCount - 1) {
+                            mainViewModel.loadItems()
+                        }
                     }
                 }
             })

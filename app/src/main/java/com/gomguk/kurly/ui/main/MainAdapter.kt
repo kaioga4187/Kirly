@@ -87,7 +87,7 @@ class MainAdapter(
     class VerticalViewHolder(
         private val binding: ItemSectionVerticalBinding,
         private val onSectionVisible: (Int) -> Unit,
-        private val onFavoriteClick: (Product) -> Unit
+        onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_VERTICAL, onFavoriteClick)
@@ -115,7 +115,7 @@ class MainAdapter(
     class HorizontalViewHolder(
         private val binding: ItemSectionHorizontalBinding,
         private val onSectionVisible: (Int) -> Unit,
-        private val onFavoriteClick: (Product) -> Unit
+        onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         
         private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL, onFavoriteClick)
@@ -143,7 +143,7 @@ class MainAdapter(
     class GridViewHolder(
         private val binding: ItemSectionGridBinding,
         private val onSectionVisible: (Int) -> Unit,
-        private val onFavoriteClick: (Product) -> Unit
+        onFavoriteClick: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val productAdapter = ProductAdapter(ProductAdapter.VIEW_TYPE_SMALL, onFavoriteClick)

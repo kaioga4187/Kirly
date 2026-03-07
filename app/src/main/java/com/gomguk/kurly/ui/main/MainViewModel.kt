@@ -27,29 +27,33 @@ class MainViewModel @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private var currentPage = 1
+    private var nextPage: Int? = 1
     private var isLoading = false
-    private var isLastPage = false
 
     init {
         loadItems()
     }
 
     fun refresh() {
-        currentPage = 1
-        isLastPage = false
+        nextPage = 1
         _isRefreshing.value = true
         
         viewModelScope.launch {
-            val newSections = getSectionsUseCase(currentPage)
-            _sectionInfoList.value = newSections
-            currentPage++
+            val response = getSectionsUseCase(1)
+            if (response != null) {
+                _sectionInfoList.value = response.data
+                nextPage = response.paging?.next_page
+            } else {
+                _sectionInfoList.value = emptyList()
+                nextPage = null
+            }
             _isRefreshing.value = false
         }
     }
 
     fun loadItems() {
-        if (isLoading || isLastPage) return
+        val pageToLoad = nextPage
+        if (isLoading || pageToLoad == null) return
         
         isLoading = true
         
@@ -58,19 +62,19 @@ class MainViewModel @Inject constructor(
         _sectionInfoList.value = currentList
 
         viewModelScope.launch {
-            val newSections = getSectionsUseCase(currentPage)
+            val response = getSectionsUseCase(pageToLoad)
             
             val updatedList = (_sectionInfoList.value ?: emptyList()).toMutableList()
             if (updatedList.isNotEmpty() && updatedList.last() == null) {
                 updatedList.removeAt(updatedList.size - 1)
             }
 
-            if (newSections.isEmpty()) {
-                isLastPage = true
+            if (response == null || response.data.isEmpty()) {
+                nextPage = null
                 _sectionInfoList.value = updatedList
             } else {
-                _sectionInfoList.value = updatedList + newSections
-                currentPage++
+                _sectionInfoList.value = updatedList + response.data
+                nextPage = response.paging?.next_page
             }
 
             isLoading = false
@@ -81,14 +85,12 @@ class MainViewModel @Inject constructor(
         val currentList = _sectionInfoList.value ?: return
         val section = currentList.find { it?.id == sectionId } ?: return
 
-        // products가 null이거나 비어있을 때만 데이터를 불러옵니다.
         if (!section.products.isNullOrEmpty()) return
 
         viewModelScope.launch {
             val products = getSectionItemsUseCase(sectionId)
             section.products = products
 
-            // 데이터 변경 알림을 위해 LiveData 업데이트
             _sectionInfoList.value = currentList
         }
     }

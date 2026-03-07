@@ -17,24 +17,23 @@ class MainRepository @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val gson: Gson
 ) {
-    suspend fun getSections(page: Int = 1): List<SectionInfo> = withContext(Dispatchers.IO) {
+    suspend fun getSections(page: Int = 1): SectionsResponse? = withContext(Dispatchers.IO) {
         val request = Request.Builder()
             .url("https://kurly.com/sections?page=$page")
             .build()
 
         okHttpClient.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) return@withContext emptyList()
+            if (!response.isSuccessful) return@withContext null
 
             val responseBody = response.body?.string()
             if (responseBody != null) {
                 try {
-                    val sectionsResponse = gson.fromJson(responseBody, SectionsResponse::class.java)
-                    sectionsResponse.data
+                    gson.fromJson(responseBody, SectionsResponse::class.java)
                 } catch (e: Exception) {
-                    emptyList()
+                    null
                 }
             } else {
-                emptyList()
+                null
             }
         }
     }
