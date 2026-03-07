@@ -1,6 +1,7 @@
 package com.gomguk.kurly.di
 
 import com.gomguk.kurly.data.SectionType
+import com.gomguk.kurly.data.api.KurlyApiService
 import com.gomguk.kurly.mockserver.MockInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -10,6 +11,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -40,5 +43,21 @@ internal object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(mockInterceptor)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://kurly.com/") // 실제 베이스 URL
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideKurlyApiService(retrofit: Retrofit): KurlyApiService {
+        return retrofit.create(KurlyApiService::class.java)
     }
 }
