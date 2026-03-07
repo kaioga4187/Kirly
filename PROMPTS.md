@@ -44,7 +44,7 @@
 - **Prompt:** ProductAdapter에서 binding.heartButton을 클릭했을 때 Room 데이터베이스에 클릭된 product의 id를 저장하거나 delete하고싶어. room database와 쿼리는 이미 FavoriteProductDao에 정의되어 있고, 이를 활용하면 돼. heartButton이 on 될 때 id를 저장하고, heartButton을 off할 때 id를 db table에서 제거해줘
 
 ## 7. Multi-Module Refactoring
-- **Prompt:** 아주 좋아! 다음은 멀티 모듈을 만들고 싶어. 현재 com.gomguk.kirly.data.mockserver 내에 있는 것들을 따로 빼서 모듈로 만들고 싶어.
+- **Prompt:** 아주 좋아! 다음은 멀티 모듈을 만들고 싶어. 현재 com.gomguk.kurly.data.mockserver 내에 있는 것들을 따로 빼서 모듈로 만들고 싶어.
 
 ## 8. Code Review & Architecture Improvement
 - **Prompt:** 이 프로젝트의 코드들을 전체적으로 리뷰하고 싶어. 코드 리뷰를 부탁할게
