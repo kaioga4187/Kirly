@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.gomguk.kirly.mockserver"
+    namespace = "com.gomguk.kurly.mockserver"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 24
 
-        testInstrumentationRunner = "com.gomguk.kirly.mockserver.HiltTestRunner"
+        testInstrumentationRunner = "com.gomguk.kurly.mockserver.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 

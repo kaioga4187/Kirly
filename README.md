@@ -1,2 +1,2 @@
-# Kirly
-- First commit message
+# Kurly
+- First commit

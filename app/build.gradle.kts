@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.gomguk.kirly"
+    namespace = "com.gomguk.kurly"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.gomguk.kirly"
+        applicationId = "com.gomguk.kurly"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
