@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -77,9 +78,36 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         // Then
-        // loadItems adds null first (loading), then data, so it changes at least twice
         verify(sectionInfoObserver, atLeastOnce()).onChanged(any())
-        assert(viewModel.sectionInfoList.value?.filterNotNull()?.size == 1)
+        assertEquals(1, viewModel.sectionInfoList.value?.filterNotNull()?.size)
+    }
+
+    @Test
+    fun `loadItems should load next page and append to list`() = runTest(testDispatcher) {
+        // Given
+        val firstResponse = SectionsResponse(
+            data = listOf(SectionInfo("Page 1", 1, SectionType.Vertical, "")),
+            paging = Paging(next_page = 2)
+        )
+        whenever(getSectionsUseCase(1)).thenReturn(firstResponse)
+        
+        viewModel = MainViewModel(getSectionsUseCase, getSectionItemsUseCase, favoriteProductDao)
+        advanceUntilIdle()
+
+        val secondResponse = SectionsResponse(
+            data = listOf(SectionInfo("Page 2", 2, SectionType.Vertical, "")),
+            paging = null
+        )
+        whenever(getSectionsUseCase(2)).thenReturn(secondResponse)
+
+        // When
+        viewModel.loadItems()
+        advanceUntilIdle()
+
+        // Then
+        val currentList = viewModel.sectionInfoList.value?.filterNotNull()
+        assertEquals(2, currentList?.size)
+        assertEquals("Page 2", currentList?.last()?.title)
     }
 
     @Test
@@ -101,8 +129,30 @@ class MainViewModelTest {
 
         // Then
         val currentList = viewModel.sectionInfoList.value?.filterNotNull()
-        assert(currentList?.size == 1)
-        assert(currentList?.first()?.title == "New")
+        assertEquals(1, currentList?.size)
+        assertEquals("New", currentList?.first()?.title)
+    }
+
+    @Test
+    fun `loadSectionItems updates section products`() = runTest(testDispatcher) {
+        // Given
+        val sectionId = 1
+        val initialSection = SectionInfo("Title", sectionId, SectionType.Vertical, "", products = null)
+        whenever(getSectionsUseCase(1)).thenReturn(SectionsResponse(listOf(initialSection), null))
+        
+        viewModel = MainViewModel(getSectionsUseCase, getSectionItemsUseCase, favoriteProductDao)
+        advanceUntilIdle()
+
+        val mockProducts = listOf(Product(1, "Product", "", 1000))
+        whenever(getSectionItemsUseCase(sectionId)).thenReturn(mockProducts)
+
+        // When
+        viewModel.loadSectionItems(sectionId)
+        advanceUntilIdle()
+
+        // Then
+        val updatedSection = viewModel.sectionInfoList.value?.filterNotNull()?.find { it.id == sectionId }
+        assertEquals(mockProducts, updatedSection?.products)
     }
 
     @Test
